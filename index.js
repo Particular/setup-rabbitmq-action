@@ -13,7 +13,7 @@ console.log('Cleanup path: ' + cleanupPs1);
 let isPost = core.getState('IsPost');
 core.saveState('IsPost', true);
 
-//let connectionStringName = core.getInput('connection-string-name');
+let connectionStringName = core.getInput('connection-string-name');
 let tagName = core.getInput('tag');
 
 async function run() {
@@ -32,7 +32,7 @@ async function run() {
             await exec.exec('pwsh', [
                 '-File', setupPs1,
                 '-RabbitMQName', RabbitMQName,
-                //'-connectionStringName', connectionStringName,
+                '-connectionStringName', connectionStringName,
                 '-tagName', tagName
             ]);
 

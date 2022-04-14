@@ -1,6 +1,6 @@
 param (
     [string]$hostname,
-    #[string]$connectionStringName,
+    [string]$connectionStringName,
     [string]$tagName
 )
 
@@ -37,7 +37,8 @@ echo "Tagging container image"
 $dateTag = "Created=$(Get-Date -Format "yyyy-MM-dd")"
 $ignore = az tag create --resource-id $details.id --tags $packageTag $runnerOsTag $dateTag
 
-echo "RabbitMQTransport_ConnectionString=host=$ip" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf-8 -Append
+#echo "RabbitMQTransport_ConnectionString=host=$ip" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf-8 -Append
+echo "$connectionStringName=host=$ip" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf-8 -Append
 
 $uri = "http://" + $ip + ":15672/api/health/checks/virtual-hosts"
 $tries = 0
