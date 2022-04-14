@@ -3000,7 +3000,7 @@ async function run() {
 
             await exec.exec('pwsh', [
                 '-File', setupPs1,
-                '-RabbitMQName', RabbitMQName,
+                '-hostname', RabbitMQName,
                 '-connectionStringName', connectionStringName,
                 '-tagName', tagName
             ]);
