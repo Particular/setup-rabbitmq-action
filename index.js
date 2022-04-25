@@ -16,6 +16,8 @@ core.saveState('IsPost', true);
 let connectionStringName = core.getInput('connection-string-name');
 let hostEnvVarName = core.getInput('host-env-var-name');
 let tagName = core.getInput('tag');
+console.log("HostEnvVarName = " + hostEnvVarName);
+console.log("connectionStringName = " + connectionStringName);
 
 async function run() {
 
@@ -29,7 +31,6 @@ async function run() {
             core.saveState('RabbitMQName', RabbitMQName);
 
             console.log("RabbitMQName = " + RabbitMQName);
-            console.log("HostEnvVarName = " + hostEnvVarName);
 
             await exec.exec('pwsh', [
                 '-File', setupPs1,
