@@ -16,8 +16,6 @@ core.saveState('IsPost', true);
 let connectionStringName = core.getInput('connection-string-name');
 let hostEnvVarName = core.getInput('host-env-var-name');
 let tagName = core.getInput('tag');
-console.log("HostEnvVarName = " + hostEnvVarName);
-console.log("connectionStringName = " + connectionStringName);
 
 async function run() {
 
