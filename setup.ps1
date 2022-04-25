@@ -1,7 +1,8 @@
 param (
     [string]$hostname,
     [string]$connectionStringName,
-    [string]$tagName
+    [string]$tagName,
+    [string]$hostEnvVarName
 )
 
 $hostInfo = curl -H Metadata:true "169.254.169.254/metadata/instance?api-version=2017-08-01" | ConvertFrom-Json
@@ -36,6 +37,9 @@ $dateTag = "Created=$(Get-Date -Format "yyyy-MM-dd")"
 $ignore = az tag create --resource-id $details.id --tags $packageTag $runnerOsTag $dateTag
 
 echo "$connectionStringName=host=$ip" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf-8 -Append
+if ($hostEnvVarName -ne $null) {
+    echo "$hostEnvVarName=$ip" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf-8 -Append
+}
 
 $uri = "http://" + $ip + ":15672/api/health/checks/virtual-hosts"
 $tries = 0

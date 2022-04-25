@@ -28,11 +28,28 @@ jobs:
         uses: ./
         with:
           connection-string-name: RabbitConnectionString
+          host-env-var-name: RabbitHost
           tag: setup-rabbitmq-action
-      - name: Validate
+      - name: Validate host
         shell: pwsh
         run: |
           echo "RabbitConnectionString = $($Env:RabbitConnectionString)"
           if ( $Env:RabbitConnectionString -le 0 ) {
             throw "Environment variable 'RabbitConnectionString' not set."
+          }
+          echo "RabbitHost = $($Env:RabbitHost)"
+          if ( $Env:RabbitHost - le 0 ) {
+            throw "Environment variable 'RabbitHost' not set."
+          }
+      - name: Run
+        uses: ./
+        with:
+          connection-string-name: RabbitConnectionString2
+          tag: setup-rabbitmq-action
+      - name: Validate without host var
+        shell: pwsh
+        run: |
+          echo "RabbitConnectionString2 = $($Env:RabbitConnectionString2)"
+          if ( $Env:RabbitConnectionString2 -le 0 ) {
+            throw "Environment variable 'RabbitConnectionString2' not set."
           }
