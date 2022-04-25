@@ -37,7 +37,7 @@ $dateTag = "Created=$(Get-Date -Format "yyyy-MM-dd")"
 $ignore = az tag create --resource-id $details.id --tags $packageTag $runnerOsTag $dateTag
 
 echo "$connectionStringName=host=$ip" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf-8 -Append
-if ([string]::IsNullOrWhiteSpace($hostEnvVarName)) {
+if (-not [string]::IsNullOrWhiteSpace($hostEnvVarName)) {
     Write-Output "Setting env var $hostEnvVarName"
     echo "$hostEnvVarName=$ip" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf-8 -Append
 }
