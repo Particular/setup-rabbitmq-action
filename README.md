@@ -9,8 +9,11 @@ This action handles the setup and teardown of an Azure Service Bus namespace for
         uses: Particular/setup-rabbitmq-action@v1.0.0
         with:
           connection-string-name: EnvVarToCreateWithConnectionString
+          host-env-var-name: EnvVarToCreateWithHostName
           tag: PackageName
 ```
+
+`connection-string-name` and `tag` are required. `host-env-var-name` is optional
 
 ## License
 
