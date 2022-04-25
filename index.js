@@ -29,6 +29,7 @@ async function run() {
             core.saveState('RabbitMQName', RabbitMQName);
 
             console.log("RabbitMQName = " + RabbitMQName);
+            console.log("HostEnvVarName = " + hostEnvVarName);
 
             await exec.exec('pwsh', [
                 '-File', setupPs1,
