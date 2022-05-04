@@ -51,9 +51,9 @@ do {
         Write-Output "No response, retrying..."
         Start-Sleep -m 5000
     }
-} until (($response.status) -or ($tries -ge 10))
+} until (($response.status) -or ($tries -ge 50))
 
 if ($response.status -ne "ok") {
-    Write-Output "Failed to connect after 10 attempts";
+    Write-Output "Failed to connect after 50 attempts";
     exit 1
 }
