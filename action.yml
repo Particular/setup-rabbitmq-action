@@ -10,6 +10,11 @@ inputs:
   host-env-var-name:
     description: The name of the environment variable to fill with the RabbitMQ host name
     required: false
+  image-tag:
+    description: The tag of the rabbitmq container image
+    required: false
+    default: 3-management
+
 runs:
   using: node16
   main: dist/index.js
