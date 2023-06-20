@@ -16,6 +16,7 @@ core.saveState('IsPost', true);
 let connectionStringName = core.getInput('connection-string-name');
 let hostEnvVarName = core.getInput('host-env-var-name');
 let tagName = core.getInput('tag');
+let imageTag = core.getInput('image-tag');
 
 async function run() {
 
@@ -35,7 +36,8 @@ async function run() {
                 '-hostname', RabbitMQName,
                 '-connectionStringName', connectionStringName,
                 '-tagName', tagName,
-                '-hostEnvVarName', hostEnvVarName
+                '-hostEnvVarName', hostEnvVarName,
+                '-imageTag', imageTag
             ]);
 
         } else { // Cleanup

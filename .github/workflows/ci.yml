@@ -53,3 +53,16 @@ jobs:
           if ( $Env:RabbitConnectionString2 -le 0 ) {
             throw "Environment variable 'RabbitConnectionString2' not set."
           }
+      - name: Run
+        uses: ./
+        with:
+          connection-string-name: RabbitConnectionString3
+          tag: setup-rabbitmq-action
+          image-tag: 3.11-management
+      - name: Validate with custom image tag
+        shell: pwsh
+        run: |
+          echo "RabbitConnectionString3 = $($Env:RabbitConnectionString3)"
+          if ( $Env:RabbitConnectionString3 -le 0 ) {
+            throw "Environment variable 'RabbitConnectionString3' not set."
+          }

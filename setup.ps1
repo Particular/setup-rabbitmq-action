@@ -2,7 +2,8 @@ param (
     [string]$hostname,
     [string]$connectionStringName,
     [string]$tagName,
-    [string]$hostEnvVarName
+    [string]$hostEnvVarName,
+    [string]$imageTag
 )
 
 $hostInfo = curl -H Metadata:true "169.254.169.254/metadata/instance?api-version=2017-08-01" | ConvertFrom-Json
@@ -13,7 +14,7 @@ $packageTag = "Package=$tagName"
 echo "hostname=$hostname" | Out-File -FilePath $Env:GITHUB_OUTPUT -Encoding utf-8 -Append
 echo "Creating RabbitMQ container $hostname in $region (This can take a while.)"
 
-$jsonResult = az container create --image rabbitmq:3-management --name $hostname --location $region --dns-name-label $hostname --resource-group GitHubActions-RG --cpu 4 --memory 16 --ports 5672 15672 --ip-address public
+$jsonResult = az container create --image rabbitmq:$imageTag --name $hostname --location $region --dns-name-label $hostname --resource-group GitHubActions-RG --cpu 4 --memory 16 --ports 5672 15672 --ip-address public
 
 if (!$jsonResult) {
     Write-Output "Failed to create RabbitMQ container"
