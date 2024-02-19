@@ -16,6 +16,6 @@ inputs:
     default: 3-management
 
 runs:
-  using: node16
+  using: node20
   main: dist/index.js
   post: dist/index.js
