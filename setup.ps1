@@ -17,16 +17,16 @@ $packageTag = "Package=$tagName"
 echo "hostname=$hostname" | Out-File -FilePath $Env:GITHUB_OUTPUT -Encoding utf-8 -Append
 echo "Creating RabbitMQ container $hostname in $region (This can take a while.)"
 
-$jsonResult = $null
+$azureContainerCreate = "az container create --image rabbitmq:$imageTag --name $hostname --location $region --dns-name-label $hostname --resource-group GitHubActions-RG --cpu 4 --memory 16 --ports 5672 15672 --ip-address public"
 
 if ($registryUser -and $registryPass) {
     echo "Creating container with login to $registryLoginServer"
-    $jsonResult = az container create --image rabbitmq:$imageTag --name $hostname --location $region --dns-name-label $hostname --resource-group GitHubActions-RG --cpu 4 --memory 16 --ports 5672 15672 --ip-address public --registry-login-server $registryLoginServer --registry-username $registryUser --registry-password $registryPass
+    $azureContainerCreate =  "$azureContainerCreate --registry-login-server $registryLoginServer --registry-username $registryUser --registry-password $registryPass"
 } else {
     echo "Creating container with anonymous credentials"
-    $jsonResult = az container create --image rabbitmq:$imageTag --name $hostname --location $region --dns-name-label $hostname --resource-group GitHubActions-RG --cpu 4 --memory 16 --ports 5672 15672 --ip-address public
 }
 
+$jsonResult = Invoke-Expression $azureContainerCreate
 if (!$jsonResult) {
     Write-Output "Failed to create RabbitMQ container"
     exit 1;
