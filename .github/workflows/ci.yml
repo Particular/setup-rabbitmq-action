@@ -34,6 +34,8 @@ jobs:
           connection-string-name: RabbitConnectionString
           host-env-var-name: RabbitHost
           tag: setup-rabbitmq-action
+          registry-username: ${{ secrets.DOCKERHUB_USERNAME }}
+          registry-password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Validate host
         shell: pwsh
         run: |
@@ -50,6 +52,8 @@ jobs:
         with:
           connection-string-name: RabbitConnectionString2
           tag: setup-rabbitmq-action
+          registry-username: ${{ secrets.DOCKERHUB_USERNAME }}
+          registry-password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Validate without host var
         shell: pwsh
         run: |
@@ -63,6 +67,8 @@ jobs:
           connection-string-name: RabbitConnectionString3
           tag: setup-rabbitmq-action
           image-tag: 3.11-management
+          registry-username: ${{ secrets.DOCKERHUB_USERNAME }}
+          registry-password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Validate with custom image tag
         shell: pwsh
         run: |
