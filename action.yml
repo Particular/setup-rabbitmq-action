@@ -17,7 +17,7 @@ inputs:
   registry-login-server:
     description: The container registry to log in to, if required
     required: false
-    default: registry-1.docker.io
+    default: index.docker.io
   registry-username:
     description: The username to log in to the container registry. Will not attempt login if not provided.
     required: false

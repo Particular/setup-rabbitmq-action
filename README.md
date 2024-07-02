@@ -12,7 +12,7 @@ This action handles the setup and teardown of a RabbitMQ container for running t
           host-env-var-name: EnvVarToCreateWithHostName
           tag: PackageName
           imageTag: 3-management
-          registry-login-server: registry-1.docker.io
+          registry-login-server: index.docker.io
           registry-username: ${{ secrets.DOCKERHUB_USERNAME }}
           registry-password: ${{ secrets.DOCKERHUB_TOKEN }}}}
 ```
@@ -21,7 +21,7 @@ This action handles the setup and teardown of a RabbitMQ container for running t
 
 For logging into a container registry:
 
-* `registry-login-server` defaults to `registry-1.docker.io` and is not required if logging into Docker Hub.
+* `registry-login-server` defaults to `index.docker.io` and is not required if logging into Docker Hub.
 * `registry-username` and `registry-password` are optional and will result in pulling the RabbitMQ container anonymously if omitted.
 
 ## Development
