@@ -17,6 +17,9 @@ let connectionStringName = core.getInput('connection-string-name');
 let hostEnvVarName = core.getInput('host-env-var-name');
 let tagName = core.getInput('tag');
 let imageTag = core.getInput('image-tag');
+let registryLoginServer = core.getInput('registry-login-server');
+let registryUser = core.getInput('registry-username');
+let registryPass = core.getInput('registry-password');
 
 async function run() {
 
@@ -37,7 +40,10 @@ async function run() {
                 '-connectionStringName', connectionStringName,
                 '-tagName', tagName,
                 '-hostEnvVarName', hostEnvVarName,
-                '-imageTag', imageTag
+                '-imageTag', imageTag,
+                '-registryLoginServer', registryLoginServer,
+                '-registryUser', registryUser,
+                '-registryPass', registryPass
             ]);
 
         } else { // Cleanup
