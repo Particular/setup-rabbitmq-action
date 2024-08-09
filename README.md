@@ -43,7 +43,6 @@ npm install
 
 When changing `index.js`, run `npm run prepare` afterwards to update the output in the `dist` folder.
 
-
 ## License
 
 The scripts and documentation in this project are released under the [MIT License](LICENSE).
