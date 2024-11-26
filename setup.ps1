@@ -33,7 +33,7 @@ elseif ($runnerOs -eq "Windows") {
     $packageTag = "Package=$tagName"
     $dateTag = "Created=$(Get-Date -Format "yyyy-MM-dd")"
 
-    $azureContainerCreate = "az container create --image $dockerImage --name $hostname --location $region --dns-name-label $hostname --resource-group $resourceGroup --cpu 4 --memory 16 --ports 5672 15672 --ip-address public"
+    $azureContainerCreate = "az container create --image $dockerImage --name $hostname --location $region --dns-name-label $hostname --resource-group $resourceGroup --cpu 4 --memory 16 --ports 5672 15672 --ip-address public --os-type Linux"
 
     if ($registryUser -and $registryPass) {
         Write-Output "Creating container with login to $registryLoginServer"
