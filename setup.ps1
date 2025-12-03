@@ -19,15 +19,15 @@ if ($runnerOs -eq "Linux") {
     Write-Output "Running Rabbit in container $($containerName) using Docker"
 
     if ($erlArgs) {
-        $erlArgs = "-e RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS=$managementPathPrefix"
+        $erlArgs = "-e 'RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS=$erlArgs'"
     }
 
-    docker run --name "$($hostname)" -d -p "5672:5672" -p "15672:15672" $managementPathPrefix $dockerImage
+    docker run --name "$($hostname)" -d -p "5672:5672" -p "15672:15672" $erlArgs $dockerImage
 }
 elseif ($runnerOs -eq "Windows") {
 
     if ($erlArgs) {
-        $erlArgs = "--environment-variables RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS=$managementPathPrefix"
+        $erlArgs = "-e 'RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS=$erlArgs'"
     }
     
     if ($Env:REGION_OVERRIDE) {
@@ -42,7 +42,7 @@ elseif ($runnerOs -eq "Windows") {
     $packageTag = "Package=$tagName"
     $dateTag = "Created=$(Get-Date -Format "yyyy-MM-dd")"
 
-    $azureContainerCreate = "az container create --image $dockerImage --name $hostname --location $region --dns-name-label $hostname --resource-group $resourceGroup --cpu 4 --memory 16 --ports 5672 15672 --ip-address public --os-type Linux $managementPathPrefix"
+    $azureContainerCreate = "az container create --image $dockerImage --name $hostname --location $region --dns-name-label $hostname --resource-group $resourceGroup --cpu 4 --memory 16 --ports 5672 15672 --ip-address public --os-type Linux $erlArgs"
 
     if ($registryUser -and $registryPass) {
         Write-Output "Creating container with login to $registryLoginServer"
