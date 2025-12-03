@@ -15,6 +15,7 @@ This action handles the setup and teardown of a RabbitMQ container for running t
           registry-login-server: index.docker.io
           registry-username: ${{ secrets.DOCKERHUB_USERNAME }}
           registry-password: ${{ secrets.DOCKERHUB_TOKEN }}}}
+          erl-args: -rabbitmq_management path_prefix "/my-prefix"
 ```
 
 `connection-string-name` and `tag` are required. `host-env-var-name`, and `imageTag` are optional.
@@ -23,6 +24,10 @@ For logging into a container registry:
 
 * `registry-login-server` defaults to `index.docker.io` and is not required if logging into Docker Hub.
 * `registry-username` and `registry-password` are optional and will result in pulling the RabbitMQ container anonymously if omitted.
+
+## RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS
+
+Use `erl-args` to pass arguments to the `RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS` environment variable.
 
 ## Development
 

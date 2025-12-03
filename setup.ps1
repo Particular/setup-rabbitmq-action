@@ -6,7 +6,8 @@ param (
     [string]$imageTag,
     [string]$registryLoginServer,
     [string]$registryUser,
-    [string]$registryPass
+    [string]$registryPass,
+    [string]$erlArgs
 )
 
 $dockerImage = "rabbitmq:$imageTag"
@@ -17,10 +18,18 @@ $ipAddress = "127.0.0.1"
 if ($runnerOs -eq "Linux") {
     Write-Output "Running Rabbit in container $($containerName) using Docker"
 
-    docker run --name "$($hostname)" -d -p "5672:5672" -p "15672:15672" $dockerImage
+    if ($erlArgs) {
+        $erlArgs = "-e RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS=$managementPathPrefix"
+    }
+
+    docker run --name "$($hostname)" -d -p "5672:5672" -p "15672:15672" $managementPathPrefix $dockerImage
 }
 elseif ($runnerOs -eq "Windows") {
 
+    if ($erlArgs) {
+        $erlArgs = "--environment-variables RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS=$managementPathPrefix"
+    }
+    
     if ($Env:REGION_OVERRIDE) {
         $region = $Env:REGION_OVERRIDE
     }
@@ -33,7 +42,7 @@ elseif ($runnerOs -eq "Windows") {
     $packageTag = "Package=$tagName"
     $dateTag = "Created=$(Get-Date -Format "yyyy-MM-dd")"
 
-    $azureContainerCreate = "az container create --image $dockerImage --name $hostname --location $region --dns-name-label $hostname --resource-group $resourceGroup --cpu 4 --memory 16 --ports 5672 15672 --ip-address public --os-type Linux"
+    $azureContainerCreate = "az container create --image $dockerImage --name $hostname --location $region --dns-name-label $hostname --resource-group $resourceGroup --cpu 4 --memory 16 --ports 5672 15672 --ip-address public --os-type Linux $managementPathPrefix"
 
     if ($registryUser -and $registryPass) {
         Write-Output "Creating container with login to $registryLoginServer"

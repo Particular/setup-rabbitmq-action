@@ -24,6 +24,9 @@ inputs:
   registry-password:
     description: The password to log in to the container registry. Will not attempt login if not provided.
     required: false
+  erl-args:
+    description: Additional arguments passed to RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS
+    required: false
 
 runs:
   using: node20

@@ -20,6 +20,7 @@ let imageTag = core.getInput('image-tag');
 let registryLoginServer = core.getInput('registry-login-server');
 let registryUser = core.getInput('registry-username');
 let registryPass = core.getInput('registry-password');
+let erlArgs = core.getInput('erl-args');
 
 async function run() {
 
@@ -43,7 +44,8 @@ async function run() {
                 '-imageTag', imageTag,
                 '-registryLoginServer', registryLoginServer,
                 '-registryUser', registryUser,
-                '-registryPass', registryPass
+                '-registryPass', registryPass,
+                '-erlArgs', erlArgs
             ]);
 
         } else { // Cleanup
