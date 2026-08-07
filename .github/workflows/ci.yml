@@ -11,26 +11,27 @@ on:
   workflow_dispatch:
 jobs:
   ci:
-    name: ${{ matrix.os.name }} - ${{ matrix.scenario.name }}
-    runs-on: ${{ matrix.os.label }}
+    name: ${{ matrix.name }}-${{ matrix.scenario.label }}
+    runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
-        os:
-          - label: windows-latest
-            name: Windows
-          - label: ubuntu-latest
-            name: Linux
+        os: [windows-latest, ubuntu-latest]
         scenario:
-          - name: default
+          - label: Default setup
             image-tag: 3-management
             host-env-var-name: RabbitHost
-          - name: no-host-var
+          - label: No host env var
             image-tag: 3-management
             host-env-var-name: ''
-          - name: custom-image-tag
+          - label: Custom image tag
             image-tag: 3.11-management
             host-env-var-name: ''
-      fail-fast: false
+        include:
+          - os: windows-latest
+            name: Windows
+          - os: ubuntu-latest
+            name: Linux
     steps:
       - name: Checkout
         uses: actions/checkout@v7.0.1
