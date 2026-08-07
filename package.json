@@ -2,9 +2,20 @@
     "name": "setup-rabbitmq-action",
     "version": "1.0.0",
     "description": "",
-    "main": "index.js",
+    "type": "module",
+    "main": "index.mjs",
     "scripts": {
-      "prepare": "ncc build index.js -o dist --license licenses.txt"
+      "dev": "npm-watch",
+      "prepare": "ncc build index.mjs -o dist --license licenses.txt"
+    },
+    "watch": {
+      "prepare": {
+        "patterns": [
+          "index.mjs"
+        ],
+        "ignore": "dist/*",
+        "runOnChangeOnly": true
+      }
     },
     "repository": {
       "type": "git",
@@ -19,6 +30,7 @@
     "homepage": "https://github.com/Particular/setup-rabbitmq-action#readme",
     "dependencies": {
       "@actions/core": "^3.0.0",
-      "@actions/exec": "^3.0.0"
+      "@actions/exec": "^3.0.0",
+      "npm-watch": "^0.13.0"
     }
   }

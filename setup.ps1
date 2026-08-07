@@ -11,59 +11,46 @@ param (
 
 $dockerImage = "rabbitmq:$imageTag"
 $runnerOs = $Env:RUNNER_OS ?? "Linux"
-$resourceGroup = $Env:RESOURCE_GROUP_OVERRIDE ?? "GitHubActions-RG"
 $ipAddress = "127.0.0.1"
 
+if (-not $Env:WSL_TOOLS_MODULE_PATH) {
+    throw "This action requires Particular/setup-wsl-action to run first — it provisions WSL/Docker and exports the WslTools module at WSL_TOOLS_MODULE_PATH."
+}
+Import-Module $Env:WSL_TOOLS_MODULE_PATH -Force
+
 if ($runnerOs -eq "Linux") {
-    Write-Output "Running Rabbit in container $($containerName) using Docker"
+    Write-Output "Running Rabbit in container $($hostname) using Docker"
 
     docker run --name "$($hostname)" -d -p "5672:5672" -p "15672:15672" $dockerImage
 }
 elseif ($runnerOs -eq "Windows") {
+    Write-Output "Running Rabbit in container $($hostname) using WSL"
 
-    if ($Env:REGION_OVERRIDE) {
-        $region = $Env:REGION_OVERRIDE
+    $wslDistribution = $Env:WSL_DISTRIBUTION
+    $ipAddress = $Env:WSL_IP
+
+    if (-not $ipAddress) {
+        throw "WSL_IP is not set. Run Particular/setup-wsl-action before this action."
     }
-    else {
-        $hostInfo = curl -H Metadata:true "169.254.169.254/metadata/instance?api-version=2017-08-01" | ConvertFrom-Json
-        $region = $hostInfo.compute.location
-    }
-
-    $runnerOsTag = "RunnerOS=$($Env:RUNNER_OS)"
-    $packageTag = "Package=$tagName"
-    $dateTag = "Created=$(Get-Date -Format "yyyy-MM-dd")"
-
-    $azureContainerCreate = "az container create --image $dockerImage --name $hostname --location $region --dns-name-label $hostname --resource-group $resourceGroup --cpu 4 --memory 16 --ports 5672 15672 --ip-address public --os-type Linux"
+    Write-Output "WSL address: $ipAddress"
 
     if ($registryUser -and $registryPass) {
-        Write-Output "Creating container with login to $registryLoginServer"
-        $azureContainerCreate =  "$azureContainerCreate --registry-login-server $registryLoginServer --registry-username $registryUser --registry-password $registryPass"
-    } else {
-        Write-Output "Creating container with anonymous credentials"
+        Write-Output "::add-mask::$registryPass"
+        Write-Output "Logging in to $registryLoginServer inside WSL"
+        $loginCommand = "docker login --username '$registryUser' --password-stdin '$registryLoginServer'"
+        $registryPass | wsl.exe --distribution $wslDistribution --user root -- bash -c $loginCommand
+        if ($LASTEXITCODE -ne 0) {
+            throw "Docker registry login inside WSL failed with exit code $LASTEXITCODE"
+        }
+    }
+    else {
+        Write-Output "Using anonymous credentials"
     }
 
-    Write-Output "Creating RabbitMQ container $hostname in $region (This can take a while.)"
-
-    $jsonResult = Invoke-Expression $azureContainerCreate
-    if (!$jsonResult) {
-        Write-Output "Failed to create RabbitMQ container"
-        exit 1;
-    }
-
-    $details = $jsonResult | ConvertFrom-Json
-
-    if (!$details.ipAddress) {
-        Write-Output "Failed to create RabbitMQ container $hostname in $region"
-        Write-Output $jsonResult
-        exit 1;
-    }
-
-    $ipAddress=$details.ipAddress.ip
-
-    Write-Output "::add-mask::$ipAddress"
-    Write-Output "Tagging container image"
-    az tag create --resource-id $details.id --tags $packageTag $runnerOsTag $dateTag | Out-Null
-
+    Write-Output "::group::Starting RabbitMQ container"
+    Invoke-Wsl -Distribution $wslDistribution -CheckExitCode -Command "docker run --name $hostname --detach --restart unless-stopped --publish 5672:5672 --publish 15672:15672 $dockerImage"
+    Invoke-Wsl -Distribution $wslDistribution -Command "docker ps --filter name=$hostname"
+    Write-Output "::endgroup::"
 }
 else {
     Write-Output "$runnerOs not supported"
