@@ -30792,7 +30792,7 @@ const cleanupPs1 = external_node_path_namespaceObject.resolve(index_dirname, '..
 const isPost = getState('IsPost');
 saveState('IsPost', true);
 
-const connectionStringName = getInput('connection-string-name');
+const connectionStringName = getInput('connection-string-name', { required: true });
 const hostEnvVarName = getInput('host-env-var-name');
 const imageTag = getInput('image-tag');
 const registryLoginServer = getInput('registry-login-server');

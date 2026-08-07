@@ -11,7 +11,7 @@ const cleanupPs1 = path.resolve(__dirname, '../cleanup.ps1');
 const isPost = core.getState('IsPost');
 core.saveState('IsPost', true);
 
-const connectionStringName = core.getInput('connection-string-name');
+const connectionStringName = core.getInput('connection-string-name', { required: true });
 const hostEnvVarName = core.getInput('host-env-var-name');
 const imageTag = core.getInput('image-tag');
 const registryLoginServer = core.getInput('registry-login-server');
