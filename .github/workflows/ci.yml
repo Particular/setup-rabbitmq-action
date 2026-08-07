@@ -18,13 +18,13 @@ jobs:
       matrix:
         os: [windows-latest, ubuntu-latest]
         scenario:
-          - label: Default setup
+          - label: Default
             image-tag: 3-management
             host-env-var-name: RabbitHost
-          - label: No host env var
+          - label: NoHost
             image-tag: 3-management
             host-env-var-name: ''
-          - label: Custom image tag
+          - label: CustomImage
             image-tag: 3.11-management
             host-env-var-name: ''
         include:
