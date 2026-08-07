@@ -13,7 +13,6 @@ core.saveState('IsPost', true);
 
 const connectionStringName = core.getInput('connection-string-name');
 const hostEnvVarName = core.getInput('host-env-var-name');
-const tagName = core.getInput('tag');
 const imageTag = core.getInput('image-tag');
 const registryLoginServer = core.getInput('registry-login-server');
 const registryUser = core.getInput('registry-username');
@@ -33,7 +32,6 @@ async function run() {
                 '-File', setupPs1,
                 '-hostname', rabbitMQName,
                 '-connectionStringName', connectionStringName,
-                '-tagName', tagName,
                 '-hostEnvVarName', hostEnvVarName,
                 '-imageTag', imageTag,
                 '-registryLoginServer', registryLoginServer,

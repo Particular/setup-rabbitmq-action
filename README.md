@@ -19,14 +19,13 @@ steps:
   with:
     connection-string-name: EnvVarToCreateWithConnectionString
     host-env-var-name: EnvVarToCreateWithHostName
-    tag: PackageName
     image-tag: 3-management
     registry-login-server: index.docker.io
     registry-username: ${{ secrets.DOCKERHUB_USERNAME }}
     registry-password: ${{ secrets.DOCKERHUB_TOKEN }}
 ```
 
-`connection-string-name` and `tag` are required. `host-env-var-name` and `image-tag` are optional.
+`connection-string-name` is required. `host-env-var-name` and `image-tag` are optional.
 
 For logging into a container registry when running on Windows:
 

@@ -1,7 +1,6 @@
 param (
     [string]$hostname,
     [string]$connectionStringName,
-    [string]$tagName,
     [string]$hostEnvVarName,
     [string]$imageTag,
     [string]$registryLoginServer,

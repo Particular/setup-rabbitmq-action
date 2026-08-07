@@ -4,9 +4,6 @@ inputs:
   connection-string-name:
     description: The name of the environment variable to fill with the RabbitMQ connection string
     required: true
-  tag:
-    description: The name of the component RabbitMQ is being used for. The RabbitMQ namespace is tagged with this value.
-    required: true
   host-env-var-name:
     description: The name of the environment variable to fill with the RabbitMQ host name
     required: false
