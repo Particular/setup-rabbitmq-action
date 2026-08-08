@@ -11,68 +11,52 @@ on:
   workflow_dispatch:
 jobs:
   ci:
-    name: ${{ matrix.name }}
+    name: ${{ matrix.name }}-${{ matrix.scenario.label }}
     runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
+        os: [windows-latest, ubuntu-latest]
+        scenario:
+          - label: Default
+            image-tag: 3-management
+            host-env-var-name: RabbitHost
+          - label: NoHost
+            image-tag: 3-management
+            host-env-var-name: ''
+          - label: CustomImage
+            image-tag: 3.11-management
+            host-env-var-name: ''
         include:
           - os: windows-latest
             name: Windows
           - os: ubuntu-latest
             name: Linux
-      fail-fast: false
     steps:
       - name: Checkout
         uses: actions/checkout@v7.0.1
-      - name: Azure login
-        uses: azure/login@v3.0.1
-        with:
-          creds: ${{ secrets.AZURE_ACI_CREDENTIALS }}
+      - name: Setup WSL
+        uses: Particular/setup-wsl-action@v1.0.0
       - name: Run
         uses: ./
         with:
           connection-string-name: RabbitConnectionString
-          host-env-var-name: RabbitHost
-          tag: setup-rabbitmq-action
+          host-env-var-name: ${{ matrix.scenario.host-env-var-name }}
+          image-tag: ${{ matrix.scenario.image-tag }}
           registry-username: ${{ secrets.DOCKERHUB_USERNAME }}
           registry-password: ${{ secrets.DOCKERHUB_TOKEN }}
-      - name: Validate host
+      - name: Validate connection string
         shell: pwsh
         run: |
           echo "RabbitConnectionString = $($Env:RabbitConnectionString)"
           if ( $Env:RabbitConnectionString -le 0 ) {
             throw "Environment variable 'RabbitConnectionString' not set."
           }
+      - name: Validate host var
+        if: matrix.scenario.host-env-var-name != ''
+        shell: pwsh
+        run: |
           echo "RabbitHost = $($Env:RabbitHost)"
           if ( $Env:RabbitHost -le 0 ) {
             throw "Environment variable 'RabbitHost' not set."
-          }
-      - name: Run
-        uses: ./
-        with:
-          connection-string-name: RabbitConnectionString2
-          tag: setup-rabbitmq-action
-          registry-username: ${{ secrets.DOCKERHUB_USERNAME }}
-          registry-password: ${{ secrets.DOCKERHUB_TOKEN }}
-      - name: Validate without host var
-        shell: pwsh
-        run: |
-          echo "RabbitConnectionString2 = $($Env:RabbitConnectionString2)"
-          if ( $Env:RabbitConnectionString2 -le 0 ) {
-            throw "Environment variable 'RabbitConnectionString2' not set."
-          }
-      - name: Run
-        uses: ./
-        with:
-          connection-string-name: RabbitConnectionString3
-          tag: setup-rabbitmq-action
-          image-tag: 3.11-management
-          registry-username: ${{ secrets.DOCKERHUB_USERNAME }}
-          registry-password: ${{ secrets.DOCKERHUB_TOKEN }}
-      - name: Validate with custom image tag
-        shell: pwsh
-        run: |
-          echo "RabbitConnectionString3 = $($Env:RabbitConnectionString3)"
-          if ( $Env:RabbitConnectionString3 -le 0 ) {
-            throw "Environment variable 'RabbitConnectionString3' not set."
           }
